@@ -67,6 +67,22 @@ ILI9341/
 - STM32 HAL libraries must be enabled
 ---
 
+## 🧩 Pin Configuration
+
+| TFT LCD Pin | STM32F407VG Pin | Description         |
+|-------------|-----------------|---------------------|
+| VCC         | 3.3V            | Power               |
+| GND         | GND             | Ground              |
+| CS          | PA4             | Chip Select         |
+| RESET       | PA2             | Reset Pin           |
+| DC          | PA3             | Data/Command        |
+| SDI(MOSI)   | PA7 (SPI1)      | Master Out Slave In |
+| SCK         | PA5 (SPI1)      | Pin of Clock        |
+| LED         | 3.3V            | Screen led          |
+
+> You can modify the pin mappings in `main.c` by `ILI9341_HandleTypeDef` if needed.
+---
+
 ## Configuration
 
 Define an `ILI9341_HandleTypeDef` structure and call `ILI9341_init()` to initialize:
@@ -139,6 +155,15 @@ The library supports 5 different font sizes: `Font8`, `Font12`, `Font16`, `Font2
 ```c
 ILI9341_SetFont(&tft, &Font12);
 ```
+
+---
+
+## 📎 Documentation
+
+You can download the ILI9341 datasheet as PDF:
+
+[⬇️ Download Datasheet (PDF)](https://github.com/SERENGOKYILDIZ/STM32_ILI9341_TFT_LCD/raw/main/docs/ILI9341.PDF)
+---
 
 ## License
 
