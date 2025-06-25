@@ -57,6 +57,8 @@ static void MX_SPI1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+
+/*
 #include "spi_ili9341.h"
 #include "stdio.h"
 #include "string.h"
@@ -67,6 +69,12 @@ extern uint16_t TFT9341_HEIGHT;
 uint16_t i,j;
 uint32_t sayi=0;
 char data[20];
+*/
+
+#include "ILI9341.h"
+
+uint32_t num=0;
+
 
 /* USER CODE END 0 */
 
@@ -102,20 +110,34 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
-	TFT9341_ini(240, 320);
-	TFT9341_FillScreen(TFT9341_YELLOW);
-	TFT9341_SetRotation(1);
-	TFT9341_SetTextColor(TFT9341_YELLOW);
-	TFT9341_SetBackColor(TFT9341_BLUE);
-	TFT9341_SetFont(&Font24);
-	TFT9341_DrawChar(10,10,'E');
-	TFT9341_DrawChar(27,10,('r'));
-	TFT9341_DrawChar(44,10,('e'));
-	TFT9341_DrawChar(61,10,('n'));
-	TFT9341_String(10,40,"Gokyildiz");
+	ILI9341_HandleTypeDef tft_lcd={
+		  .hspi =&hspi1,
+		  .CS   ={GPIOA, GPIO_PIN_4},
+		  .RST  ={GPIOA, GPIO_PIN_2},
+		  .DC   ={GPIOA, GPIO_PIN_3},
+	};
+
+	ILI9341_init(&tft_lcd);
+	ILI9341_FillScreen(&tft_lcd, ILI9341_BLUE);
+	ILI9341_SetRotation(&tft_lcd, 1);
+	ILI9341_SetTextColor(&tft_lcd, ILI9341_BLACK);
+	ILI9341_SetBackColor(&tft_lcd, ILI9341_YELLOW);
+
+	ILI9341_SetFont(&tft_lcd, &Font24);
+	ILI9341_DrawChar(&tft_lcd, 10,10,'E');
+	ILI9341_DrawChar(&tft_lcd, 27,10,('r'));
+	ILI9341_DrawChar(&tft_lcd, 44,10,('e'));
+	ILI9341_DrawChar(&tft_lcd, 61,10,('n'));
+	ILI9341_String(&tft_lcd, 10,40,"Gokyildiz");
 	HAL_Delay(2000);
 
+	ILI9341_DrawCircle(&tft_lcd, 250, 100, 50, ILI9341_BLACK);
+	ILI9341_DrawCircle(&tft_lcd, 250, 100, 40, ILI9341_BLACK);
+	ILI9341_DrawCircle(&tft_lcd, 250, 100, 30, ILI9341_BLACK);
+	ILI9341_DrawCircle(&tft_lcd, 250, 100, 20, ILI9341_BLACK);
+	ILI9341_DrawCircle(&tft_lcd, 250, 100, 10, ILI9341_BLACK);
 
+	ILI9341_FillRect(&tft_lcd, 250, 200, 300, 230, ILI9341_BLACK);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -125,13 +147,10 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	sayi++;
-	sprintf(data,"SAYI:%0u",sayi);
-	//	TFT9341_SetFont(&Font24);
-	TFT9341_String(1,124,"STM32F407");
-	TFT9341_String(1,154,data);
-	// HAL_Delay(100);
-	// TFT9341_SetRotation(1);
+	num++;
+	ILI9341_Printf(&tft_lcd, 10, 124, "Osman Mert");
+	ILI9341_Printf(&tft_lcd, 10, 154, "Num: %04d", num);
+
   }
   /* USER CODE END 3 */
 }
