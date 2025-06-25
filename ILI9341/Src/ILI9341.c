@@ -51,6 +51,23 @@ void ILI9341_SendData(ILI9341_HandleTypeDef* hili9341, uint8_t dt)
 	HAL_SPI_Transmit (hili9341->hspi, &dt, 1, 5000);
 }
 
+void ILI9341_Pins_Init(ILI9341_HandleTypeDef* hili9341)
+{
+	GPIO_InitTypeDef gpio_Initdef;
+	gpio_Initdef.Mode=GPIO_MODE_OUTPUT_PP;
+	gpio_Initdef.Pull=GPIO_NOPULL;
+	gpio_Initdef.Speed=GPIO_SPEED_FREQ_HIGH;
+
+	gpio_Initdef.Pin = hili9341->CS.pin;
+	HAL_GPIO_Init(hili9341->CS.port, &gpio_Initdef);
+
+	gpio_Initdef.Pin = hili9341->RST.pin;
+	HAL_GPIO_Init(hili9341->RST.port, &gpio_Initdef);
+
+	gpio_Initdef.Pin = hili9341->DC.pin;
+	HAL_GPIO_Init(hili9341->DC.port, &gpio_Initdef);
+}
+
 void ILI9341_WriteData(ILI9341_HandleTypeDef* hili9341, uint8_t* buff, size_t buff_size) {
 	DC_Data_Mode(hili9341);
 	while(buff_size > 0) {
@@ -333,9 +350,13 @@ void ILI9341_Printf(ILI9341_HandleTypeDef* hili9341, uint16_t x, uint16_t y, con
 
 void ILI9341_init(ILI9341_HandleTypeDef* hili9341)
 {
+	uint8_t data[15];
+
 	if(hili9341->w_size==0)hili9341->w_size=ILI9341_WIDTH;
 	if(hili9341->h_size==0)hili9341->h_size=ILI9341_HEIGHT;
-	uint8_t data[15];
+
+	ILI9341_Pins_Init(hili9341);
+
 	CS_Active(hili9341);
 	ILI9341_Reset(hili9341);
 	//Software Reset
